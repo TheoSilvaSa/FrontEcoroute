@@ -1,0 +1,13 @@
+<div class="flex justify-content-center align-items-center h-screen bg-blue-50">
+    <p-card header="Acesso EcoRoute" [style]="{width: '350px'}">
+        <div class="field">
+            <label>E-mail</label>
+            <input pInputText class="w-full" [(ngModel)]="email" placeholder="admin@greenlog.com">
+        </div>
+        <div class="field">
+            <label>Senha</label>
+            <input type="password" pInputText class="w-full" [(ngModel)]="senha">
+        </div>
+        <button pButton label="Acessar Sistema" class="w-full" (click)="logar()"></button>
+    </p-card>
+</div>

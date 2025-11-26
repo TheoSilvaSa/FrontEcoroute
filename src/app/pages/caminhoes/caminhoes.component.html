@@ -1,0 +1,33 @@
+<p-card header="Gestão de Caminhões">
+    <p-toolbar styleClass="mb-3">
+        <button pButton label="Novo Caminhão" icon="pi pi-plus" (click)="abrirModal()"></button>
+    </p-toolbar>
+
+    <p-table [value]="lista" [rows]="5" [paginator]="true">
+        <ng-template pTemplate="header">
+            <tr><th>Placa</th><th>Motorista</th><th>Carga (Kg)</th><th>Resíduos</th><th>Ações</th></tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-c>
+            <tr>
+                <td>{{c.placa}}</td>
+                <td>{{c.motorista}}</td>
+                <td>{{c.capacidadeCarga}}</td>
+                <td>{{c.residuosSuportados}}</td>
+                <td>
+                    <button pButton icon="pi pi-pencil" class="p-button-info p-button-rounded mr-2" (click)="abrirModal(c)"></button>
+                    <button pButton icon="pi pi-trash" class="p-button-danger p-button-rounded" (click)="deletar(c.id)"></button>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+</p-card>
+
+<p-dialog [(visible)]="modalAberto" header="Caminhão" [modal]="true" [style]="{width:'400px'}">
+    <div class="field"><label>Placa</label><input pInputText class="w-full" [(ngModel)]="caminhao.placa"></div>
+    <div class="field"><label>Motorista</label><input pInputText class="w-full" [(ngModel)]="caminhao.motorista"></div>
+    <div class="field"><label>Capacidade (Kg)</label><input type="number" pInputText class="w-full" [(ngModel)]="caminhao.capacidadeCarga"></div>
+    <div class="field"><label>Resíduos</label><input pInputText class="w-full" [(ngModel)]="caminhao.residuosSuportados" placeholder="Ex: Papel, Metal"></div>
+    <ng-template pTemplate="footer">
+        <button pButton label="Salvar" (click)="salvar()"></button>
+    </ng-template>
+</p-dialog>

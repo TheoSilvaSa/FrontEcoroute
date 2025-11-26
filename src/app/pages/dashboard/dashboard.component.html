@@ -1,0 +1,30 @@
+<div class="grid">
+    <div class="col-12 md:col-8">
+        <p-card header="Mapa Logístico - EcoRoute">
+            <app-mapa-grafo></app-mapa-grafo>
+        </p-card>
+    </div>
+
+    <div class="col-12 md:col-4">
+        <p-card header="Calcular Melhor Rota (Dijkstra)">
+            <p class="text-sm text-color-secondary">IDs de Bairros válidos são 1 a 20 (baseado no CSV).</p>
+            <div class="field">
+                <label>ID Bairro Origem</label>
+                <input type="number" pInputText class="w-full" [(ngModel)]="origem">
+            </div>
+            <div class="field">
+                <label>ID Bairro Destino</label>
+                <input type="number" pInputText class="w-full" [(ngModel)]="destino">
+            </div>
+            <button pButton label="Calcular Rota" icon="pi pi-search" class="w-full" (click)="calcular()"></button>
+            
+            <div *ngIf="resultado" class="mt-3 surface-200 p-3 border-round">
+                <p><strong>Distância Total:</strong> {{resultado.distanciaTotal}} km</p>
+                <p><strong>Trajeto:</strong></p>
+                <ul>
+                    <li *ngFor="let passo of resultado.caminho">{{passo}}</li>
+                </ul>
+            </div>
+        </p-card>
+    </div>
+</div>

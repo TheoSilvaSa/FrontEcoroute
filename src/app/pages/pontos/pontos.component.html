@@ -1,0 +1,46 @@
+<p-card header="Gestão de Pontos de Coleta">
+    <p-toolbar styleClass="mb-3">
+        <button pButton label="Novo Ponto" icon="pi pi-plus" (click)="abrirModal()"></button>
+    </p-toolbar>
+
+    <p-table [value]="lista" [rows]="10" [paginator]="true" [scrollable]="true" scrollHeight="400px">
+        <ng-template pTemplate="header">
+            <tr>
+                <th>Bairro</th>
+                <th>Nome</th>
+                <th>Responsável</th>
+                <th>Telefone</th>
+                <th>E-mail</th>
+                <th>Endereço</th> <th>Horário</th> 
+                <th>Resíduos Aceitos</th>
+                <th>Ações</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-p>
+            <tr>
+                <td>{{p.bairro?.nome || 'N/A'}}</td>
+                <td>{{p.nome}}</td>
+                <td>{{p.responsavel}}</td>
+                <td>{{p.telefone}}</td>
+                <td>{{p.email}}</td>
+                <td>{{p.endereco}}</td> <td>{{p.horario}}</td> <td>{{p.tiposResiduo}}</td> <td>
+                    <button pButton icon="pi pi-pencil" class="p-button-info p-button-rounded mr-2" (click)="abrirModal(p)"></button>
+                    <button pButton icon="pi pi-trash" class="p-button-danger p-button-rounded" (click)="deletar(p.id)"></button>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+    
+    <p-dialog [(visible)]="modalAberto" header="Detalhes do Ponto" [modal]="true" [style]="{width:'500px'}">
+        <div class="field"><label>Nome do Ponto</label><input pInputText class="w-full" [(ngModel)]="ponto.nome"></div>
+        <div class="field"><label>Responsável</label><input pInputText class="w-full" [(ngModel)]="ponto.responsavel"></div>
+        <div class="field"><label>Telefone</label><input pInputText class="w-full" [(ngModel)]="ponto.telefone"></div>
+        <div class="field"><label>E-mail</label><input pInputText class="w-full" [(ngModel)]="ponto.email"></div>
+        <div class="field"><label>Endereço</label><input pInputText class="w-full" [(ngModel)]="ponto.endereco" placeholder="Ex: Rua A, nº 291"></div> <div class="field"><label>Horário</label><input pInputText class="w-full" [(ngModel)]="ponto.horario" placeholder="Ex: 8h às 16h"></div> 
+        <div class="field"><label>Resíduos Aceitos</label><input pInputText class="w-full" [(ngModel)]="ponto.tiposResiduo" placeholder="Ex: Papel, Metal, Orgânico"></div>
+        
+        <ng-template pTemplate="footer">
+            <button pButton label="Salvar" (click)="salvar()"></button>
+        </ng-template>
+    </p-dialog>
+</p-card>
