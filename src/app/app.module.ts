@@ -18,10 +18,10 @@ import { ToastModule } from 'primeng/toast';
 import { MenubarModule } from 'primeng/menubar';
 import { MessageService } from 'primeng/api';
 // 💡 MÓDULOS DE ITINERÁRIO FALTANTES:
-import { FieldsetModule } from 'primeng/fieldset'; 
-import { ListboxModule } from 'primeng/listbox'; 
-import { DropdownModule } from 'primeng/dropdown'; 
-import { CalendarModule } from 'primeng/calendar'; 
+import { FieldsetModule } from 'primeng/fieldset';
+import { ListboxModule } from 'primeng/listbox';
+import { DropdownModule } from 'primeng/dropdown';
+import { CalendarModule } from 'primeng/calendar';
 
 // Componentes (Garantindo que todos estão declarados)
 import { LoginComponent } from './pages/login/login.component';
@@ -31,6 +31,7 @@ import { PontosComponent } from './pages/pontos/pontos.component';
 import { MapaGrafoComponent } from './components/mapa-grafo/mapa-grafo.component';
 import { ItinerarioComponent } from './pages/itinerario/itinerario.component';
 import { RotasComponent } from './pages/rotas/rotas.component';
+import {TabViewModule} from "primeng/tabview";
 
 @NgModule({
   declarations: [
@@ -49,7 +50,7 @@ import { RotasComponent } from './pages/rotas/rotas.component';
     BrowserAnimationsModule,
     HttpClientModule,
     FormsModule,
-    
+
     // Módulos PrimeNG (Completo)
     InputTextModule,
     ButtonModule,
@@ -62,7 +63,9 @@ import { RotasComponent } from './pages/rotas/rotas.component';
     FieldsetModule, // NOVO
     ListboxModule,  // NOVO
     DropdownModule, // NOVO
-    CalendarModule  // NOVO
+    CalendarModule,
+    TabViewModule,
+    // NOVO
   ],
   providers: [MessageService],
   bootstrap: [AppComponent]

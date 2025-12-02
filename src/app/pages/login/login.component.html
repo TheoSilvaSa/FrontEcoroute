@@ -1,13 +1,39 @@
 <div class="flex justify-content-center align-items-center h-screen bg-blue-50">
-    <p-card header="Acesso EcoRoute" [style]="{width: '350px'}">
-        <div class="field">
+  <p-card header="Acesso EcoRoute" [style]="{width: '400px'}">
+    <p-tabView [(activeIndex)]="tabIndex">
+      <p-tabPanel header="Login">
+        <div class="p-fluid">
+          <div class="field">
             <label>E-mail</label>
             <input pInputText class="w-full" [(ngModel)]="email" placeholder="admin@greenlog.com">
-        </div>
-        <div class="field">
+          </div>
+          <div class="field">
             <label>Senha</label>
             <input type="password" pInputText class="w-full" [(ngModel)]="senha">
+          </div>
+          <button pButton label="Acessar Sistema" class="w-full" (click)="logar()"></button>
         </div>
-        <button pButton label="Acessar Sistema" class="w-full" (click)="logar()"></button>
-    </p-card>
+      </p-tabPanel>
+
+      <p-tabPanel header="Cadastro">
+        <div class="p-fluid">
+          <div class="field">
+            <label>Nome Completo</label>
+            <input pInputText class="w-full" [(ngModel)]="novoUsuario.nome" placeholder="Seu nome">
+          </div>
+          <div class="field">
+            <label>E-mail</label>
+            <input pInputText class="w-full" [(ngModel)]="novoUsuario.email" placeholder="seu.email@exemplo.com">
+          </div>
+          <div class="field">
+            <label>Senha</label>
+            <input type="password" pInputText class="w-full" [(ngModel)]="novoUsuario.senha">
+          </div>
+
+          <button pButton label="Cadastrar Usuário" class="w-full p-button-success" (click)="cadastrar()"></button>
+          <p class="text-xs text-color-secondary mt-3">Sua conta será criada com o perfil padrão "USER".</p>
+        </div>
+      </p-tabPanel>
+    </p-tabView>
+  </p-card>
 </div>
