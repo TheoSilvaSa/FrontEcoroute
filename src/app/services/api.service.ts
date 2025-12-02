@@ -11,6 +11,11 @@ export class ApiService {
   // Auth
   login(credenciais: any): Observable<any> { return this.http.post(`${this.baseUrl}/login`, credenciais); }
 
+  // Cadastro de Usuário
+  cadastrarUsuario(usuario: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/usuarios`, usuario);
+  }
+
   // Caminhões (CRUD)
   listarCaminhoes(): Observable<any[]> { return this.http.get<any[]>(`${this.baseUrl}/caminhoes`); }
   salvarCaminhao(obj: any): Observable<any> {
@@ -28,19 +33,19 @@ export class ApiService {
   deletarPonto(id: number): Observable<void> { return this.http.delete<void>(`${this.baseUrl}/pontos-coleta/${id}`); }
 
   // Grafo e Roteamento (Dijkstra)
-  listarBairros(): Observable<any[]> { return this.http.get<any[]>(`${this.baseUrl}/bairros`); } 
+  listarBairros(): Observable<any[]> { return this.http.get<any[]>(`${this.baseUrl}/bairros`); }
   listarRuas(): Observable<any[]> { return this.http.get<any[]>(`${this.baseUrl}/ruas`); }
-  
+
   calcularRota(origemId: number, destinoId: number): Observable<any> {
     return this.http.get(`${this.baseUrl}/rota?origemId=${origemId}&destinoId=${destinoId}`);
   }
 
   // 💡 CORRIGIDO: ROTAS SALVAS (CRUD)
   listarRotasSalvas(): Observable<any[]> { return this.http.get<any[]>(`${this.baseUrl}/rotas`); }
-  
+
   // MÉTODO FALTANTE ADICIONADO: Salva a rota calculada
   salvarRotaCalculada(rota: any): Observable<any> { return this.http.post(`${this.baseUrl}/rotas`, rota); }
-  
+
   // MÉTODO FALTANTE ADICIONADO: Deleta uma rota salva
   deletarRota(id: number): Observable<void> { return this.http.delete<void>(`${this.baseUrl}/rotas/${id}`); }
 
