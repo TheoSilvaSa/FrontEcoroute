@@ -31,7 +31,6 @@ export class ItinerarioComponent implements OnInit {
 
   carregarDadosBase() {
     this.api.listarRotasSalvas().subscribe(rotas => this.rotasSalvas = rotas);
-    
     this.api.listarCaminhoes().subscribe(caminhoes => this.todosCaminhoes = caminhoes);
   }
 
@@ -47,16 +46,27 @@ export class ItinerarioComponent implements OnInit {
 
     const rotaSelecionada = this.rotasSalvas.find(r => r.id === this.novoAgendamento.rotaId);
 
-    if (rotaSelecionada) {
-        const residuoDaRota = rotaSelecionada.tiposResiduosAtendidos;
+    if (rotaSelecionada && rotaSelecionada.tiposResiduosAtendidos) {
+        const requisitosRota = rotaSelecionada.tiposResiduosAtendidos
+            .split(',')
+            .map((s: string) => s.trim());
 
         this.caminhoesCompativeis = this.todosCaminhoes.filter(caminhao => {
-            const residuosCaminhao = caminhao.residuosSuportados || "";
-            return residuosCaminhao.includes(residuoDaRota);
+            if (!caminhao.residuosSuportados) return false;
+
+            const capacidadesCaminhao = caminhao.residuosSuportados
+                .split(',')
+                .map((s: string) => s.trim());
+
+            return requisitosRota.every((req: string) => capacidadesCaminhao.includes(req));
         });
 
         if (this.caminhoesCompativeis.length === 0) {
-            this.msg.add({severity:'warn', summary:'Aviso', detail: `Nenhum caminhão apto para ${residuoDaRota}.`});
+            this.msg.add({
+                severity: 'warn', 
+                summary: 'Aviso', 
+                detail: `Nenhum caminhão apto para: ${rotaSelecionada.tiposResiduosAtendidos}.`
+            });
         }
     }
   }
