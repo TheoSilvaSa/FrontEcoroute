@@ -12,8 +12,8 @@ export class RotasComponent implements OnInit {
   
   tiposResiduosOpcoes: any[] = [
       { label: 'Plástico', value: 'Plástico' },
-      { label: 'Papel', value: 'Papel' },
       { label: 'Metal', value: 'Metal' },
+      { label: 'Papel', value: 'Papel' },
       { label: 'Orgânico', value: 'Orgânico' }
   ];
 
@@ -22,7 +22,8 @@ export class RotasComponent implements OnInit {
   
   rotaCalculada: any = null; 
   nomeNovaRota: string = '';
-  tipoResiduoSelecionado: string = '';
+  
+  tipoResiduoSelecionado: string[] = [];
 
   constructor(private api: ApiService, private msg: MessageService) {}
 
@@ -52,8 +53,8 @@ export class RotasComponent implements OnInit {
   }
 
   salvarRota() {
-    if (!this.nomeNovaRota || !this.rotaCalculada || !this.tipoResiduoSelecionado) {
-      this.msg.add({severity:'warn', summary:'Atenção', detail:'Preencha o nome e selecione o tipo de resíduo.'});
+    if (!this.nomeNovaRota || !this.rotaCalculada || this.tipoResiduoSelecionado.length === 0) {
+      this.msg.add({severity:'warn', summary:'Atenção', detail:'Preencha o nome e selecione pelo menos um tipo de resíduo.'});
       return;
     }
 
@@ -61,7 +62,7 @@ export class RotasComponent implements OnInit {
       nome: this.nomeNovaRota,
       distanciaTotal: this.rotaCalculada.distanciaTotal,
       sequenciaBairros: this.rotaCalculada.caminho,
-      tiposResiduosAtendidos: this.tipoResiduoSelecionado, 
+      tiposResiduosAtendidos: this.tipoResiduoSelecionado.join(', '), 
       caminhaoDesignadoPlaca: "A Definir" 
     };
 
@@ -70,7 +71,7 @@ export class RotasComponent implements OnInit {
         this.msg.add({severity:'success', summary:'Sucesso', detail:'Rota definida com sucesso!'});
         this.rotaCalculada = null;
         this.nomeNovaRota = '';
-        this.tipoResiduoSelecionado = '';
+        this.tipoResiduoSelecionado = [];
         this.carregarRotasSalvas();
       },
       error: () => this.msg.add({severity:'error', summary:'Erro', detail:'Falha ao salvar rota.'})

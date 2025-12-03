@@ -19,6 +19,8 @@ import { ListboxModule } from 'primeng/listbox';
 import { DropdownModule } from 'primeng/dropdown';
 import { CalendarModule } from 'primeng/calendar';
 import { TabViewModule } from "primeng/tabview";
+import { MultiSelectModule } from 'primeng/multiselect';
+import { TagModule } from 'primeng/tag';
 import { LoginComponent } from './pages/login/login.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { CaminhoesComponent } from './pages/caminhoes/caminhoes.component';
@@ -56,7 +58,9 @@ import { RotasComponent } from './pages/rotas/rotas.component';
     ListboxModule,
     DropdownModule,
     CalendarModule,
-    TabViewModule
+    TabViewModule,
+    MultiSelectModule,
+    TagModule
   ],
   providers: [MessageService],
   bootstrap: [AppComponent]
