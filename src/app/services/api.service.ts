@@ -10,6 +10,10 @@ export class ApiService {
 
   login(credenciais: any): Observable<any> { return this.http.post(`${this.baseUrl}/login`, credenciais); }
 
+  cadastrarUsuario(usuario: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/usuarios`, usuario);
+  }
+
   listarCaminhoes(): Observable<any[]> { return this.http.get<any[]>(`${this.baseUrl}/caminhoes`); }
   salvarCaminhao(obj: any): Observable<any> {
     if (obj.id) return this.http.put(`${this.baseUrl}/caminhoes/${obj.id}`, obj);
@@ -26,7 +30,7 @@ export class ApiService {
 
   listarBairros(): Observable<any[]> { return this.http.get<any[]>(`${this.baseUrl}/bairros`); } 
   listarRuas(): Observable<any[]> { return this.http.get<any[]>(`${this.baseUrl}/ruas`); }
-  
+
   calcularRota(origemId: number, destinoId: number): Observable<any> {
     return this.http.get(`${this.baseUrl}/rota?origemId=${origemId}&destinoId=${destinoId}`);
   }
@@ -34,10 +38,11 @@ export class ApiService {
   listarRotasSalvas(): Observable<any[]> { return this.http.get<any[]>(`${this.baseUrl}/rotas`); }
   
   salvarRotaCalculada(rota: any): Observable<any> { return this.http.post(`${this.baseUrl}/rotas`, rota); }
-  
+
   deletarRota(id: number): Observable<void> { return this.http.delete<void>(`${this.baseUrl}/rotas/${id}`); }
 
   listarItinerarios(): Observable<any[]> { return this.http.get<any[]>(`${this.baseUrl}/itinerarios`); }
+  
   agendarItinerario(itinerarioData: any): Observable<any> {
     return this.http.post(`${this.baseUrl}/itinerarios`, itinerarioData);
   }

@@ -8,7 +8,17 @@ import { MessageService } from 'primeng/api';
   templateUrl: './login.component.html'
 })
 export class LoginComponent {
-  email = ''; senha = '';
+  tabIndex = 0;
+
+  email = '';
+  senha = '';
+
+  novoUsuario: any = {
+    nome: '',
+    email: '',
+    senha: '',
+    perfil: 'USER'
+  };
 
   constructor(private api: ApiService, private router: Router, private msg: MessageService) {}
 
@@ -19,6 +29,25 @@ export class LoginComponent {
         this.router.navigate(['/dashboard']);
       },
       error: () => this.msg.add({severity:'error', summary:'Erro', detail:'Credenciais inválidas'})
+    });
+  }
+
+  cadastrar() {
+    if (!this.novoUsuario.nome || !this.novoUsuario.email || !this.novoUsuario.senha) {
+      this.msg.add({severity:'warn', summary:'Atenção', detail:'Preencha todos os campos obrigatórios.'});
+      return;
+    }
+
+    this.api.cadastrarUsuario(this.novoUsuario).subscribe({
+      next: () => {
+        this.msg.add({severity:'success', summary:'Sucesso', detail:'Usuário cadastrado! Faça login.'});
+        this.novoUsuario = { nome: '', email: '', senha: '', perfil: 'USER' };
+        this.tabIndex = 0;
+        this.email = this.novoUsuario.email;
+      },
+      error: (err) => {
+        this.msg.add({severity:'error', summary:'Erro', detail: err.error.message || 'Falha ao cadastrar usuário.'});
+      }
     });
   }
 }
