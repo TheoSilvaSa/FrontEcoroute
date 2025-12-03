@@ -1,8 +1,8 @@
 <p-card header="Planejamento de Itinerários (Cronograma Mensal)">
-
     <div class="grid">
+        
         <div class="col-12 md:col-4">
-            <p-fieldset legend="Agendar Nova Rota">
+            <p-fieldset legend="Agendar Nova Coleta">
                 <div class="p-fluid">
                     
                     <div class="field">
@@ -11,70 +11,88 @@
                                     optionLabel="nome" 
                                     optionValue="id" 
                                     [(ngModel)]="novoAgendamento.rotaId" 
+                                    (onChange)="aoSelecionarRota()"
                                     placeholder="Selecione a Rota">
                         </p-dropdown>
                     </div>
 
                     <div class="field">
                         <label>Caminhão Designado</label>
-                        <p-dropdown [options]="caminhoesDisponiveis" 
+                        <p-dropdown [options]="caminhoesCompativeis" 
                                     optionLabel="placa" 
                                     optionValue="id" 
                                     [(ngModel)]="novoAgendamento.caminhaoId" 
-                                    placeholder="Selecione o Caminhão">
+                                    [disabled]="!novoAgendamento.rotaId"
+                                    placeholder="Selecione o Caminhão"
+                                    emptyMessage="Nenhum caminhão para este resíduo">
+                             
+                             <ng-template let-c pTemplate="item">
+                                <div class="flex flex-column">
+                                    <span class="font-bold">{{c.placa}}</span>
+                                    <span class="text-sm text-500">Aceita: {{c.residuosSuportados}}</span>
+                                </div>
+                            </ng-template>
                         </p-dropdown>
+                        
+                        <small *ngIf="novoAgendamento.rotaId && caminhoesCompativeis.length > 0" class="text-green-500">
+                            {{caminhoesCompativeis.length}} caminhões compatíveis encontrados.
+                        </small>
+                         <small *ngIf="novoAgendamento.rotaId && caminhoesCompativeis.length === 0" class="text-red-500">
+                            Nenhum caminhão atende o resíduo desta rota.
+                        </small>
                     </div>
 
                     <div class="field">
                         <label>Data da Coleta</label>
-                        <p-calendar dateFormat="dd/mm/yy" 
-                                    [(ngModel)]="novoAgendamento.dataAgendada" 
-                                    placeholder="dd/mm/aaaa">
+                        <p-calendar [(ngModel)]="novoAgendamento.dataAgendada" 
+                                    dateFormat="dd/mm/yy" 
+                                    [showIcon]="true" 
+                                    placeholder="Selecione a data">
                         </p-calendar>
                     </div>
 
-                    <button pButton label="Agendar Itinerário" icon="pi pi-calendar-plus" (click)="salvarItinerario()"></button>
+                    <button pButton label="Confirmar Agendamento" icon="pi pi-calendar-plus" (click)="salvarItinerario()"></button>
 
                 </div>
             </p-fieldset>
         </div>
 
         <div class="col-12 md:col-8">
-            <p-fieldset legend="Agenda Mensal (Itinerários Agendados)">
-                <p-table [value]="itinerariosAgendados" [rows]="5" [paginator]="true">
+            <p-fieldset legend="Agenda Mensal">
+                <p-table [value]="itinerariosAgendados" [rows]="5" [paginator]="true" responsiveLayout="scroll">
                     <ng-template pTemplate="header">
                         <tr>
-                            <th>ID Rota</th>
-                            <th>Caminhão</th>
                             <th>Data</th>
-                            <th>Status</th>
+                            <th>Rota (Descrição)</th>
+                            <th>Caminhão (Placa)</th>
+                            <th>Ações</th>
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-i>
                         <tr>
-                            <td>{{i.rotaDescricao || 'N/A'}}</td>
-                            <td>{{i.caminhaoId}}</td>
-                            <td>{{i.dataAgendada | date:'shortDate'}}</td>
-                            <td>{{i.status}}</td>
+                            <td>{{i.dataAgendada | date:'dd/MM/yyyy'}}</td>
+                            
+                            <td class="font-bold">{{i.rotaDescricao}}</td>
+                            
+                            <td>
+                                <div class="flex align-items-center">
+                                    <i class="pi pi-truck mr-2 text-primary"></i>
+                                    {{i.caminhao?.placa || 'N/A'}}
+                                </div>
+                            </td>
+                            
+                            <td>
+                                <button pButton icon="pi pi-trash" class="p-button-rounded p-button-danger p-button-text" (click)="deletarItinerario(i.id)"></button>
+                            </td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage">
+                        <tr>
+                            <td colspan="4" class="text-center text-500">Nenhum itinerário agendado.</td>
                         </tr>
                     </ng-template>
                 </p-table>
             </p-fieldset>
-            
-            <p-card *ngIf="rotaCalculada" header="Detalhes da Rota" styleClass="mt-4">
-                 <div class="mb-3">
-                    <strong>Distância (Total):</strong> 
-                    <span class="text-xl text-primary">{{ rotaCalculada?.distancia | number:'1.2-2' }} km</span>
-                </div>
-
-                <p-fieldset legend="Ordem de Visita">
-                    <ol>
-                        <li *ngFor="let bairro of rotaCalculada?.bairrosVisitados">
-                            {{ bairro.nome }} (ID: {{ bairro.id }})
-                        </li>
-                    </ol>
-                </p-fieldset>
-            </p-card>
         </div>
     </div>
 </p-card>

@@ -49,8 +49,6 @@ import { RotasComponent } from './pages/rotas/rotas.component';
     BrowserAnimationsModule,
     HttpClientModule,
     FormsModule,
-    
-    // Módulos PrimeNG (Completo)
     InputTextModule,
     ButtonModule,
     CardModule,
@@ -59,10 +57,10 @@ import { RotasComponent } from './pages/rotas/rotas.component';
     ToolbarModule,
     ToastModule,
     MenubarModule,
-    FieldsetModule, // NOVO
-    ListboxModule,  // NOVO
-    DropdownModule, // NOVO
-    CalendarModule  // NOVO
+    FieldsetModule,
+    ListboxModule,
+    DropdownModule,
+    CalendarModule
   ],
   providers: [MessageService],
   bootstrap: [AppComponent]

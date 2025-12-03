@@ -7,7 +7,7 @@ import { MessageService } from 'primeng/api';
   templateUrl: './dashboard.component.html' 
 })
 export class DashboardComponent {
-  origem: number = 0; 
+  origem: number = 2; 
   destino: number = 0; 
   resultado: any = null;
 
@@ -19,10 +19,9 @@ export class DashboardComponent {
         return;
     }
     
-    // Chama o serviço que executa o Dijkstra no Backend Java
     this.api.calcularRota(this.origem, this.destino).subscribe(res => {
       this.resultado = res;
-      if (res.erro) { // Se o Backend retornou erro (ex: caminho não encontrado)
+      if (res.erro) {
          this.msg.add({severity:'error', summary:'Erro de Rota', detail: res.erro});
       }
     });

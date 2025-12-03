@@ -20,11 +20,9 @@ items: MenuItem[] = [
   constructor(private router: Router) {}
 
   exibirMenu(): boolean {
-    // 💡 CORREÇÃO: O menu só aparece se o usuário estiver logado E a URL não for a de login.
     const estaLogado = !!localStorage.getItem('usuarioLogado');
     const estaNaPaginaDeLogin = this.router.url.includes('/login');
     
-    // Se estiver logado E não estiver na página de login, ou se não estiver logado, mas estiver na raiz
     return estaLogado && !estaNaPaginaDeLogin;
   }
 
