@@ -1,69 +1,74 @@
 <div class="grid">
     <div class="col-12 md:col-4">
-        <p-card header="1. Calcular e Registrar Rota">
+        <p-card header="1. Calcular e Definir Rota">
             <div class="p-fluid">
                 <div class="field">
                     <label>ID Bairro Origem</label>
-                    <input type="number" pInputText [(ngModel)]="origemId">
+                    <input type="number" pInputText [(ngModel)]="origemId" [disabled]="true">
+                    <small class="text-secondary">Saída fixa: Garagem (Centro)</small>
                 </div>
                 <div class="field">
                     <label>ID Bairro Destino</label>
-                    <input type="number" pInputText [(ngModel)]="destinoId">
+                    <input type="number" pInputText [(ngModel)]="destinoId" placeholder="Ex: 5">
                 </div>
                 
-                <button pButton label="Calcular Caminho Mínimo" icon="pi pi-calculator" (click)="calcularEExibir()"></button>
+                <button pButton label="Calcular Caminho" icon="pi pi-map-marker" (click)="calcularEExibir()"></button>
             </div>
 
-            <div *ngIf="rotaCalculada" class="mt-4 p-3 border-round surface-200">
-                <h5>Resultado do Cálculo:</h5>
-                <p><strong>Distância:</strong> {{ rotaCalculada.distanciaTotal | number:'1.2-2' }} km</p>
-                <p><strong>Trajeto:</strong> {{ rotaCalculada.caminho.join(' -> ') }}</p>
+            <div *ngIf="rotaCalculada" class="mt-4 p-3 border-round surface-100 border-1 surface-border">
+                <h5 class="m-0 mb-2 text-primary">Resultado:</h5>
+                <p class="m-1"><strong>Distância:</strong> {{ rotaCalculada.distanciaTotal | number:'1.2-2' }} km</p>
+                <p class="m-1 text-sm"><strong>Trajeto:</strong> {{ rotaCalculada.caminho.join(' → ') }}</p>
 
                 <div class="field mt-3">
-                    <label>Nomear Rota</label>
-                    <input type="text" pInputText [(ngModel)]="nomeNovaRota" placeholder="Ex: Rota 1 - Norte">
+                    <label class="font-bold">Nome da Rota</label>
+                    <input type="text" pInputText [(ngModel)]="nomeNovaRota">
                 </div>
 
                 <div class="field">
-                    <label>Designar Caminhão (Placa)</label>
-                    <p-dropdown [options]="caminhoesDisponiveis" 
-                                optionLabel="placa" 
-                                optionValue="id" 
-                                [(ngModel)]="caminhaoSelecionadoId" 
-                                placeholder="Selecione o Caminhão">
+                    <label class="font-bold">Tipo de Resíduo da Rota</label>
+                    <p-dropdown [options]="tiposResiduosOpcoes" 
+                                [(ngModel)]="tipoResiduoSelecionado" 
+                                placeholder="Selecione o Tipo">
                     </p-dropdown>
                 </div>
                 
-                <button pButton label="Salvar Rota" icon="pi pi-save" (click)="salvarRota()" class="p-button-success mt-2"></button>
+                <button pButton label="Salvar Definição" icon="pi pi-save" (click)="salvarRota()" class="p-button-success mt-2 w-full"></button>
             </div>
         </p-card>
     </div>
 
     <div class="col-12 md:col-8">
-        <p-card header="2. Rotas Cadastradas para Agendamento">
-             <p-table [value]="rotasSalvas" [rows]="5" [paginator]="true">
+        <p-card header="2. Rotas Cadastradas">
+             <p-table [value]="rotasSalvas" [rows]="5" [paginator]="true" responsiveLayout="scroll">
                 <ng-template pTemplate="header">
                     <tr>
-                        <th>Rota</th>
-                        <th>Caminhão</th>
+                        <th>Nome da Rota</th>
                         <th>Tipo Resíduo</th>
                         <th>Distância</th>
-                        <th>Sequência de Bairros</th>
+                        <th>Trajeto</th>
                         <th>Ações</th>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-r>
                     <tr>
-                        <td>{{r.nome}}</td>
-                        <td>{{r.caminhaoDesignadoPlaca}}</td> <td>{{r.tiposResiduosAtendidos}}</td> <td>{{r.distanciaTotal | number:'1.2-2'}} km</td>
-                        <td>{{r.sequenciaBairros.join(' -> ')}}</td>
+                        <td class="font-bold">{{r.nome}}</td>
+                        <td><span class="p-tag p-tag-info">{{r.tiposResiduosAtendidos}}</span></td> 
+                        <td>{{r.distanciaTotal | number:'1.2-2'}} km</td>
+                        <td class="text-sm text-500" style="max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                            {{r.sequenciaBairros.join(' → ')}}
+                        </td>
                         <td>
-                             <button pButton icon="pi pi-trash" class="p-button-danger p-button-rounded" (click)="deletarRota(r.id)"></button>
+                             <button pButton icon="pi pi-trash" class="p-button-rounded p-button-danger p-button-text" (click)="deletarRota(r.id)"></button>
                         </td>
                     </tr>
                 </ng-template>
+                <ng-template pTemplate="emptymessage">
+                    <tr>
+                        <td colspan="5" class="text-center">Nenhuma rota cadastrada.</td>
+                    </tr>
+                </ng-template>
             </p-table>
-            <p *ngIf="rotasSalvas.length === 0" class="mt-3 text-center text-color-secondary">Nenhuma rota cadastrada para agendamento.</p>
         </p-card>
     </div>
 </div>

@@ -10,7 +10,8 @@
             <p class="text-sm text-color-secondary">IDs de Bairros válidos são 1 a 20 (baseado no CSV).</p>
             <div class="field">
                 <label>ID Bairro Origem</label>
-                <input type="number" pInputText class="w-full" [(ngModel)]="origem">
+                <input type="number" pInputText class="w-full" [(ngModel)]="origem" [disabled]="true">
+                <small class="block text-500">Fixo: Centro (Garagem)</small>
             </div>
             <div class="field">
                 <label>ID Bairro Destino</label>

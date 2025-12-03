@@ -9,21 +9,25 @@ import { MessageService } from 'primeng/api';
 export class RotasComponent implements OnInit {
 
   rotasSalvas: any[] = [];
-  caminhoesDisponiveis: any[] = []; // Para o Dropdown
   
-  origemId: number | null = null;
+  tiposResiduosOpcoes: any[] = [
+      { label: 'Plástico', value: 'Plástico' },
+      { label: 'Papel', value: 'Papel' },
+      { label: 'Metal', value: 'Metal' },
+      { label: 'Orgânico', value: 'Orgânico' }
+  ];
+
+  origemId: number = 2; 
   destinoId: number | null = null;
+  
   rotaCalculada: any = null; 
-  
   nomeNovaRota: string = '';
-  caminhaoSelecionadoId: number | null = null; // ID do caminhão
-  
+  tipoResiduoSelecionado: string = '';
+
   constructor(private api: ApiService, private msg: MessageService) {}
 
   ngOnInit() {
     this.carregarRotasSalvas();
-    // 💡 NOVO: Carrega caminhões ao iniciar o componente
-    this.api.listarCaminhoes().subscribe(data => this.caminhoesDisponiveis = data); 
   }
 
   carregarRotasSalvas() {
@@ -39,7 +43,7 @@ export class RotasComponent implements OnInit {
     this.api.calcularRota(this.origemId, this.destinoId).subscribe({
       next: (res) => {
         this.rotaCalculada = res;
-        this.nomeNovaRota = `Rota ${res.caminho[0]} para ${res.caminho[res.caminho.length - 1]}`;
+        this.nomeNovaRota = `Rota para ${res.caminho[res.caminho.length - 1]}`;
       },
       error: (err) => {
         this.msg.add({severity:'error', summary:'Erro', detail: err.error?.erro || 'Falha ao calcular rota.'});
@@ -48,47 +52,35 @@ export class RotasComponent implements OnInit {
   }
 
   salvarRota() {
-    if (!this.nomeNovaRota || !this.rotaCalculada || !this.caminhaoSelecionadoId) {
-      this.msg.add({severity:'warn', summary:'Atenção', detail:'Preencha todos os campos e calcule a rota.'});
+    if (!this.nomeNovaRota || !this.rotaCalculada || !this.tipoResiduoSelecionado) {
+      this.msg.add({severity:'warn', summary:'Atenção', detail:'Preencha o nome e selecione o tipo de resíduo.'});
       return;
     }
 
-    // 💡 PASSO CRÍTICO: Busca o objeto Caminhão para obter a placa e os Tipos de Resíduo
-    const caminhaoDesignado = this.caminhoesDisponiveis.find(c => c.id === this.caminhaoSelecionadoId);
-    
-    // Atribuição automática dos resíduos suportados pelo caminhão
-    const tiposResiduos = caminhaoDesignado ? caminhaoDesignado.residuosSuportados : '';
-    
-    if (!tiposResiduos) {
-         this.msg.add({severity:'error', summary:'Erro', detail:'O caminhão designado não tem Tipos de Resíduos definidos (campo vazio).'});
-         return;
-    }
-    
     const novaRota = {
       nome: this.nomeNovaRota,
       distanciaTotal: this.rotaCalculada.distanciaTotal,
       sequenciaBairros: this.rotaCalculada.caminho,
-      // 💡 CAMPOS EXIGIDOS
-      tiposResiduosAtendidos: tiposResiduos, // Preenchido automaticamente!
-      caminhaoDesignadoPlaca: caminhaoDesignado ? caminhaoDesignado.placa : 'N/A' 
+      tiposResiduosAtendidos: this.tipoResiduoSelecionado, 
+      caminhaoDesignadoPlaca: "A Definir" 
     };
 
     this.api.salvarRotaCalculada(novaRota).subscribe({
       next: () => {
-        this.msg.add({severity:'success', summary:'Sucesso', detail:'Rota salva para agendamento!'});
+        this.msg.add({severity:'success', summary:'Sucesso', detail:'Rota definida com sucesso!'});
         this.rotaCalculada = null;
         this.nomeNovaRota = '';
-        this.caminhaoSelecionadoId = null;
+        this.tipoResiduoSelecionado = '';
         this.carregarRotasSalvas();
       },
-      error: () => this.msg.add({severity:'error', summary:'Erro', detail:'Falha ao salvar.'})
+      error: () => this.msg.add({severity:'error', summary:'Erro', detail:'Falha ao salvar rota.'})
     });
   }
-  
+
   deletarRota(id: number) {
-     if(confirm('Tem certeza que deseja excluir esta rota?')) {
+     if(confirm('Deseja excluir esta rota?')) {
         this.api.deletarRota(id).subscribe(() => {
-            this.msg.add({severity:'success', summary:'Sucesso', detail:'Rota deletada.'});
+            this.msg.add({severity:'success', summary:'Sucesso', detail:'Rota excluída.'});
             this.carregarRotasSalvas();
         });
      }
