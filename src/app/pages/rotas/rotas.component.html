@@ -26,11 +26,18 @@
                 </div>
 
                 <div class="field">
-                    <label class="font-bold">Tipo de Resíduo da Rota</label>
-                    <p-dropdown [options]="tiposResiduosOpcoes" 
-                                [(ngModel)]="tipoResiduoSelecionado" 
-                                placeholder="Selecione o Tipo">
-                    </p-dropdown>
+                    <label class="font-bold">Tipos de Resíduos da Rota</label>
+                    <p-multiSelect 
+                        [options]="tiposResiduosOpcoes" 
+                        [(ngModel)]="tipoResiduoSelecionado" 
+                        defaultLabel="Selecione os tipos..."
+                        optionLabel="label"
+                        optionValue="value"
+                        display="chip"
+                        [showClear]="true"
+                        [style]="{'width':'100%'}"
+                        appendTo="body">
+                    </p-multiSelect>
                 </div>
                 
                 <button pButton label="Salvar Definição" icon="pi pi-save" (click)="salvarRota()" class="p-button-success mt-2 w-full"></button>
@@ -44,7 +51,7 @@
                 <ng-template pTemplate="header">
                     <tr>
                         <th>Nome da Rota</th>
-                        <th>Tipo Resíduo</th>
+                        <th>Tipos de Resíduos</th>
                         <th>Distância</th>
                         <th>Trajeto</th>
                         <th>Ações</th>
@@ -53,7 +60,15 @@
                 <ng-template pTemplate="body" let-r>
                     <tr>
                         <td class="font-bold">{{r.nome}}</td>
-                        <td><span class="p-tag p-tag-info">{{r.tiposResiduosAtendidos}}</span></td> 
+                        <td>
+                            <span *ngIf="r.tiposResiduosAtendidos">
+                                <p-tag *ngFor="let item of r.tiposResiduosAtendidos.split(',')" 
+                                       [value]="item.trim()" 
+                                       severity="info" 
+                                       styleClass="mr-1 mb-1">
+                                </p-tag>
+                            </span>
+                        </td> 
                         <td>{{r.distanciaTotal | number:'1.2-2'}} km</td>
                         <td class="text-sm text-500" style="max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                             {{r.sequenciaBairros.join(' → ')}}

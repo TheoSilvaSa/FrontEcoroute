@@ -5,14 +5,27 @@
 
     <p-table [value]="lista" [rows]="5" [paginator]="true">
         <ng-template pTemplate="header">
-            <tr><th>Placa</th><th>Motorista</th><th>Carga (Kg)</th><th>Resíduos</th><th>Ações</th></tr>
+            <tr>
+                <th>Placa</th>
+                <th>Motorista</th>
+                <th>Carga (Kg)</th>
+                <th>Resíduos Suportados</th>
+                <th>Ações</th>
+            </tr>
         </ng-template>
         <ng-template pTemplate="body" let-c>
             <tr>
                 <td>{{c.placa}}</td>
                 <td>{{c.motorista}}</td>
                 <td>{{c.capacidadeCarga}}</td>
-                <td>{{c.residuosSuportados}}</td>
+                <td>
+                    <span *ngIf="c.residuosSuportados">
+                        <p-tag *ngFor="let r of c.residuosSuportados.split(',')" 
+                               [value]="r.trim()" 
+                               styleClass="mr-1 mb-1">
+                        </p-tag>
+                    </span>
+                </td>
                 <td>
                     <button pButton icon="pi pi-pencil" class="p-button-info p-button-rounded mr-2" (click)="abrirModal(c)"></button>
                     <button pButton icon="pi pi-trash" class="p-button-danger p-button-rounded" (click)="deletar(c.id)"></button>
@@ -22,12 +35,39 @@
     </p-table>
 </p-card>
 
-<p-dialog [(visible)]="modalAberto" header="Caminhão" [modal]="true" [style]="{width:'400px'}">
-    <div class="field"><label>Placa</label><input pInputText class="w-full" [(ngModel)]="caminhao.placa"></div>
-    <div class="field"><label>Motorista</label><input pInputText class="w-full" [(ngModel)]="caminhao.motorista"></div>
-    <div class="field"><label>Capacidade (Kg)</label><input type="number" pInputText class="w-full" [(ngModel)]="caminhao.capacidadeCarga"></div>
-    <div class="field"><label>Resíduos</label><input pInputText class="w-full" [(ngModel)]="caminhao.residuosSuportados" placeholder="Ex: Papel, Metal"></div>
+<p-dialog [(visible)]="modalAberto" header="Dados do Caminhão" [modal]="true" [style]="{width:'450px'}">
+    <div class="p-fluid">
+        <div class="field">
+            <label>Placa</label>
+            <input pInputText class="w-full" [(ngModel)]="caminhao.placa" placeholder="ABC1D23">
+        </div>
+        <div class="field">
+            <label>Motorista</label>
+            <input pInputText class="w-full" [(ngModel)]="caminhao.motorista">
+        </div>
+        <div class="field">
+            <label>Capacidade (Kg)</label>
+            <input type="number" pInputText class="w-full" [(ngModel)]="caminhao.capacidadeCarga">
+        </div>
+        
+        <div class="field">
+            <label>Tipos de Resíduos Suportados</label>
+            <p-multiSelect 
+                [options]="tiposResiduosOpcoes" 
+                [(ngModel)]="residuosSelecionados" 
+                defaultLabel="Selecione os tipos..." 
+                optionLabel="label" 
+                optionValue="value"
+                display="chip"
+                [showClear]="true"
+                appendTo="body">
+            </p-multiSelect>
+            <small class="block text-500 mt-1">Selecione um ou mais tipos que este caminhão pode transportar.</small>
+        </div>
+    </div>
+
     <ng-template pTemplate="footer">
-        <button pButton label="Salvar" (click)="salvar()"></button>
+        <button pButton label="Cancelar" icon="pi pi-times" class="p-button-text" (click)="modalAberto=false"></button>
+        <button pButton label="Salvar" icon="pi pi-check" (click)="salvar()"></button>
     </ng-template>
 </p-dialog>
