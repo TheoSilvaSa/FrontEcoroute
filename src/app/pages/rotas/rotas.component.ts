@@ -9,6 +9,7 @@ import { MessageService } from 'primeng/api';
 export class RotasComponent implements OnInit {
 
   rotasSalvas: any[] = [];
+  bairros: any[] = [];
   
   tiposResiduosOpcoes: any[] = [
       { label: 'Plástico', value: 'Plástico' },
@@ -17,7 +18,7 @@ export class RotasComponent implements OnInit {
       { label: 'Orgânico', value: 'Orgânico' }
   ];
 
-  origemId: number = 2; 
+  origemId: number = 2;
   destinoId: number | null = null;
   
   rotaCalculada: any = null; 
@@ -28,23 +29,29 @@ export class RotasComponent implements OnInit {
   constructor(private api: ApiService, private msg: MessageService) {}
 
   ngOnInit() {
-    this.carregarRotasSalvas();
+    this.carregarDados();
   }
 
-  carregarRotasSalvas() {
+  carregarDados() {
     this.api.listarRotasSalvas().subscribe(data => this.rotasSalvas = data);
+    
+    this.api.listarBairros().subscribe(data => this.bairros = data);
   }
 
   calcularEExibir() {
     if (!this.origemId || !this.destinoId) {
-      this.msg.add({severity:'warn', summary:'Atenção', detail:'Informe Origem e Destino.'});
+      this.msg.add({severity:'warn', summary:'Atenção', detail:'Selecione Origem e Destino.'});
       return;
     }
     
     this.api.calcularRota(this.origemId, this.destinoId).subscribe({
       next: (res) => {
         this.rotaCalculada = res;
-        this.nomeNovaRota = `Rota para ${res.caminho[res.caminho.length - 1]}`;
+        
+        const bairroDestino = this.bairros.find(b => b.id === this.destinoId);
+        const nomeDestino = bairroDestino ? bairroDestino.nome : 'Destino';
+        
+        this.nomeNovaRota = `Rota para ${nomeDestino}`;
       },
       error: (err) => {
         this.msg.add({severity:'error', summary:'Erro', detail: err.error?.erro || 'Falha ao calcular rota.'});
@@ -69,10 +76,13 @@ export class RotasComponent implements OnInit {
     this.api.salvarRotaCalculada(novaRota).subscribe({
       next: () => {
         this.msg.add({severity:'success', summary:'Sucesso', detail:'Rota definida com sucesso!'});
+        
         this.rotaCalculada = null;
         this.nomeNovaRota = '';
+        this.destinoId = null;
         this.tipoResiduoSelecionado = [];
-        this.carregarRotasSalvas();
+        
+        this.carregarDados();
       },
       error: () => this.msg.add({severity:'error', summary:'Erro', detail:'Falha ao salvar rota.'})
     });
@@ -82,7 +92,7 @@ export class RotasComponent implements OnInit {
      if(confirm('Deseja excluir esta rota?')) {
         this.api.deletarRota(id).subscribe(() => {
             this.msg.add({severity:'success', summary:'Sucesso', detail:'Rota excluída.'});
-            this.carregarRotasSalvas();
+            this.carregarDados();
         });
      }
   }

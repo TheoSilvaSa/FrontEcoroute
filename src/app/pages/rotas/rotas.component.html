@@ -2,23 +2,49 @@
     <div class="col-12 md:col-4">
         <p-card header="1. Calcular e Definir Rota">
             <div class="p-fluid">
+                
                 <div class="field">
-                    <label>ID Bairro Origem</label>
-                    <input type="number" pInputText [(ngModel)]="origemId" [disabled]="true">
+                    <label>Ponto de Partida (Origem)</label>
+                    <p-dropdown 
+                        [options]="bairros" 
+                        [(ngModel)]="origemId" 
+                        optionLabel="nome" 
+                        optionValue="id" 
+                        [disabled]="true"
+                        [style]="{'width':'100%'}"
+                        placeholder="Carregando...">
+                    </p-dropdown>
                     <small class="text-secondary">Saída fixa: Garagem (Centro)</small>
                 </div>
+
                 <div class="field">
-                    <label>ID Bairro Destino</label>
-                    <input type="number" pInputText [(ngModel)]="destinoId" placeholder="Ex: 5">
+                    <label>Bairro de Destino</label>
+                    <p-dropdown 
+                        [options]="bairros" 
+                        [(ngModel)]="destinoId" 
+                        optionLabel="nome" 
+                        optionValue="id" 
+                        [filter]="true" 
+                        filterBy="nome"
+                        placeholder="Selecione o Destino"
+                        [style]="{'width':'100%'}"
+                        appendTo="body">
+                    </p-dropdown>
                 </div>
                 
                 <button pButton label="Calcular Caminho" icon="pi pi-map-marker" (click)="calcularEExibir()"></button>
             </div>
 
             <div *ngIf="rotaCalculada" class="mt-4 p-3 border-round surface-100 border-1 surface-border">
-                <h5 class="m-0 mb-2 text-primary">Resultado:</h5>
+                <h5 class="m-0 mb-2 text-primary">Resultado da Rota:</h5>
                 <p class="m-1"><strong>Distância:</strong> {{ rotaCalculada.distanciaTotal | number:'1.2-2' }} km</p>
-                <p class="m-1 text-sm"><strong>Trajeto:</strong> {{ rotaCalculada.caminho.join(' → ') }}</p>
+                
+                <div class="mt-2 mb-3">
+                    <strong>Trajeto:</strong>
+                    <div class="text-sm text-600 mt-1" style="line-height: 1.5;">
+                        {{ rotaCalculada.caminho.join(' → ') }}
+                    </div>
+                </div>
 
                 <div class="field mt-3">
                     <label class="font-bold">Nome da Rota</label>
@@ -31,7 +57,7 @@
                         [options]="tiposResiduosOpcoes" 
                         [(ngModel)]="tipoResiduoSelecionado" 
                         defaultLabel="Selecione os tipos..."
-                        optionLabel="label"
+                        optionLabel="label" 
                         optionValue="value"
                         display="chip"
                         [showClear]="true"
