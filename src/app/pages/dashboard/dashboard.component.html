@@ -7,17 +7,38 @@
 
     <div class="col-12 md:col-4">
         <p-card header="Calcular Melhor Rota (Dijkstra)">
-            <p class="text-sm text-color-secondary">IDs de Bairros válidos são 1 a 20 (baseado no CSV).</p>
+            <p class="text-sm text-color-secondary mb-3">Selecione os bairros para traçar o caminho.</p>
+            
             <div class="field">
-                <label>ID Bairro Origem</label>
-                <input type="number" pInputText class="w-full" [(ngModel)]="origem" [disabled]="true">
-                <small class="block text-500">Fixo: Centro (Garagem)</small>
+                <label>Ponto de Partida (Origem)</label>
+                <p-dropdown 
+                    [options]="bairros" 
+                    [(ngModel)]="origem" 
+                    optionLabel="nome" 
+                    optionValue="id" 
+                    [disabled]="true" 
+                    [style]="{'width':'100%'}"
+                    placeholder="Carregando...">
+                </p-dropdown>
+                <small class="block text-500 mt-1">Fixo: Centro (Garagem)</small>
             </div>
+
             <div class="field">
-                <label>ID Bairro Destino</label>
-                <input type="number" pInputText class="w-full" [(ngModel)]="destino">
+                <label>Destino da Coleta</label>
+                <p-dropdown 
+                    [options]="bairros" 
+                    [(ngModel)]="destino" 
+                    optionLabel="nome" 
+                    optionValue="id" 
+                    [filter]="true" 
+                    filterBy="nome"
+                    placeholder="Selecione o Destino"
+                    [style]="{'width':'100%'}"
+                    appendTo="body">
+                </p-dropdown>
             </div>
-            <button pButton label="Calcular Rota" icon="pi pi-search" class="w-full" (click)="calcular()"></button>
+
+            <button pButton label="Calcular Rota" icon="pi pi-search" class="w-full mt-2" (click)="calcular()"></button>
             
             <div *ngIf="resultado" class="mt-3 surface-200 p-3 border-round">
                 <p><strong>Distância Total:</strong> {{resultado.distanciaTotal}} km</p>
