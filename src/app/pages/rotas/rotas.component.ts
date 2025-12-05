@@ -88,11 +88,17 @@ export class RotasComponent implements OnInit {
     });
   }
 
-  deletarRota(id: number) {
+deletarRota(id: number) {
      if(confirm('Deseja excluir esta rota?')) {
-        this.api.deletarRota(id).subscribe(() => {
-            this.msg.add({severity:'success', summary:'Sucesso', detail:'Rota excluída.'});
-            this.carregarDados();
+        this.api.deletarRota(id).subscribe({
+            next: () => {
+                this.msg.add({severity:'success', summary:'Sucesso', detail:'Rota excluída.'});
+                this.carregarDados();
+            },
+            error: (err) => {
+                const mensagem = err.error?.erro || 'Erro ao excluir rota.';
+                this.msg.add({severity:'error', summary:'Atenção', detail: mensagem});
+            }
         });
      }
   }

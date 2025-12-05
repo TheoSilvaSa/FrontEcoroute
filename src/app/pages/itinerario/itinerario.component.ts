@@ -12,8 +12,8 @@ export class ItinerarioComponent implements OnInit {
   
   todosCaminhoes: any[] = [];
   caminhoesCompativeis: any[] = [];
-
   itinerariosAgendados: any[] = [];
+  dataMinima: Date = new Date();
   
   novoAgendamento: any = {
     rotaId: null,
@@ -27,6 +27,7 @@ export class ItinerarioComponent implements OnInit {
   ngOnInit() {
     this.carregarDadosBase();
     this.carregarAgenda();
+    this.dataMinima.setHours(0, 0, 0, 0);
   }
 
   carregarDadosBase() {
@@ -100,7 +101,8 @@ export class ItinerarioComponent implements OnInit {
         this.carregarAgenda();
       },
       error: (err) => {
-        this.msg.add({severity:'error', summary:'Falha', detail: err.error?.message || 'Erro ao agendar.'});
+        const msgErro = err.error?.erro || err.error?.message || 'Erro ao agendar.';
+        this.msg.add({severity:'error', summary:'Falha', detail: msgErro});
       }
     });
   }

@@ -61,11 +61,24 @@ export class CaminhoesComponent implements OnInit {
     });
   }
   
-  deletar(id: number) {
+deletar(id: number) {
     if(confirm('Tem certeza que deseja excluir este caminhão?')) {
-      this.api.deletarCaminhao(id).subscribe(() => {
-        this.msg.add({severity:'success', summary:'Sucesso', detail:'Deletado'});
-        this.carregar();
+      this.api.deletarCaminhao(id).subscribe({
+        next: () => {
+            this.msg.add({severity:'success', summary:'Sucesso', detail:'Deletado'});
+            this.carregar();
+        },
+        error: (err) => {
+            let mensagem = 'Não foi possível excluir.';
+            if (err.status === 500) {
+                mensagem = 'Este caminhão possui itinerários agendados e não pode ser excluído.';
+            } 
+            else if (err.error?.erro) {
+                mensagem = err.error.erro;
+            }
+
+            this.msg.add({severity:'error', summary:'Atenção', detail: mensagem});
+        }
       });
     }
   }
