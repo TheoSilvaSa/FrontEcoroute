@@ -47,6 +47,7 @@
                         <p-calendar [(ngModel)]="novoAgendamento.dataAgendada" 
                                     dateFormat="dd/mm/yy" 
                                     [showIcon]="true" 
+                                    [minDate]="dataMinima"
                                     placeholder="Selecione a data">
                         </p-calendar>
                     </div>
